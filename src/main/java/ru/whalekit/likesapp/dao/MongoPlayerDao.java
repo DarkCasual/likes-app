@@ -7,6 +7,8 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 import ru.whalekit.likesapp.domain.Player;
 
+import java.util.Optional;
+
 @Repository
 public class MongoPlayerDao implements PlayerDao {
     public static final String COLLECTION_NAME = "player";
@@ -24,9 +26,9 @@ public class MongoPlayerDao implements PlayerDao {
         return template.updateFirst(query, update, Player.class, COLLECTION_NAME).getModifiedCount();
     }
 
-    public Player find(String playerId) {
+    public Optional<Player> find(String playerId) {
         Query query = new Query();
         query.addCriteria(Criteria.where("_id").is(playerId));
-        return template.findOne(query, Player.class, COLLECTION_NAME);
+        return Optional.ofNullable(template.findOne(query, Player.class, COLLECTION_NAME));
     }
 }
